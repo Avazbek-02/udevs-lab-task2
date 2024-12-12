@@ -1,0 +1,41 @@
+services:
+  app1:
+    image: node:22.12.0-alpine
+    container_name: app1
+    working_dir: /app1
+    command: ["node", "app.js"]
+    networks:
+      - mynetwork
+    depends_on:
+      - mongodb
+
+  app2:
+    image: node:22.12.0-alpine
+    container_name: app2
+    working_dir: /app2
+    command: ["node", "app.js"]
+    networks:
+      - mynetwork
+    depends_on:
+      - mongodb
+
+  mongodb:
+    image: mongo:latest
+    container_name: mongodb
+    networks:
+      - mynetwork
+    volumes:
+      - mongodb_data:/data/db
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=root
+      - MONGO_INITDB_ROOT_PASSWORD=rootpassword
+
+
+
+networks:
+  mynetwork:
+    driver: bridge
+
+volumes:
+  mongodb_data:
+    driver: local
